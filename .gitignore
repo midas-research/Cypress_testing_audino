@@ -1,0 +1,9 @@
+node_modules
+uploads
+tmp
+temp
+config
+judge0.conf
+*.env
+awscli-bundle
+.env.local
