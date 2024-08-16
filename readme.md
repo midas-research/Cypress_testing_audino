@@ -48,25 +48,38 @@ Replace your-test-file.cy.js with the path to the test file you want to run.
 If you need to set up environment variables, you can do so in a cypress.env.json file in the root of your project:
 
 json
+
 {
   "master_id": "your_master_id",
+
   "master_password": "your_master_password",
+
   "annotations_1": "your_annotations_1",
+
   "annotations_2": "your_annotations_2"
+
   // Add other environment variables as needed
 }
+
 Make sure to update this file with your actual environment variable values.
 
 ### Project Structure
 Here's a brief overview of the project structure:
 
 cypress/: Contains the Cypress tests and configuration files.
+
 e2e/: Contains the end-to-end test files.
+
 fixtures/: Holds any test data files.
+
 support/: Contains support files, such as commands or custom helpers.
+
 node_modules/: Contains the npm packages installed for the project.
+
 cypress.config.js: Cypress configuration file.
+
 package.json: Contains the project dependencies and scripts.
+
 package-lock.json: Automatically generated file that locks the versions of dependencies.
 
 
