@@ -28,3 +28,9 @@
 /// <reference types="cypress-xpath"/>
 require('cypress-xpath');
 require('cypress-file-upload');
+Cypress.Commands.add('getAudioDuration', (audioPath) => {
+    return new Cypress.Promise((resolve) => {
+        const audio = new Audio(audioPath);
+        audio.onloadedmetadata = () => resolve(audio.duration);
+    });
+});

@@ -19,7 +19,7 @@ module.exports = defineConfig({
     worker1_no:"9876543210",
     //worker 2
     worker2_id:"amans",
-    worker2_password:"Qwerty@1234",
+    worker2_password:"qwerty@1234",
     worker2_email:"contact@audino.in",
     worker2_no:"1234567890",
     //worker 3
@@ -36,6 +36,18 @@ module.exports = defineConfig({
     annotations_5: "This annotation points out potential challenges and solutions.",
     annotations_6: "Sixth annotation reflects on the value of feedback and improvement.",
     annotations_7: "This annotation suggests innovative approaches to problem-solving.",
-    annotations_8: "Eighth annotation underlines the necessity of adaptability in changing environments."
+    annotations_8: "Eighth annotation underlines the necessity of adaptability in changing environments.",
+
+    //Audio Details of Single Audio Annotation
+    file_name: "file.mp3",
+    audio_duration: "00.00", 
+
+    //Audio Details of Multiple Audio Annotation
+    file_multiple_task1: "file_multiple_task1.mp3",
+    audio_duration_file_multiple_task1: "00.00", 
+    file_multiple_task2: "file_multiple_task2.mp3",
+    audio_duration_file_multiple_task2: "00.00", 
+    file_multiple_task3: "file_multiple_task3.mp3",
+    audio_duration_file_multiple_task3: "00.00", 
 }
 });
