@@ -61,16 +61,7 @@ describe('make ground truth task for single audio task', () => {
     cy.get("ul").find("li").contains('cypress task').should('exist').click();
     cy.wait(4000);
 
-    //make the gt into acceptance
-    cy.get(".divide-y.divide-gray-100.mt-2")
-    .find("li")
-    .contains('Ground Truth')
-    .parents('li') // Ensure you're working with the correct <li> element
-    .within(() => {
-      cy.get("select").eq(1, { timeout: 10000 }).select("acceptance");
-    });
-  
-      cy.wait(3000)
+    cy.wait(3000)
     // Check if the ground truth project already exists
     cy.get(".divide-y.divide-gray-100.mt-2")
       .find("li")
@@ -96,6 +87,7 @@ describe('make ground truth task for single audio task', () => {
           cy.wait(2000)
           cy.xpath("//button[normalize-space()='Submit']").click();
           cy.wait(2000)
+cy.xpath("//button[normalize-space()='Submit']", { timeout: 1000000 }).should('not.exist');
         } else {
           cy.log('Ground truth already exists, skipping creation steps.');
         }
@@ -232,7 +224,14 @@ describe('make ground truth task for single audio task', () => {
         // Click on the navigation element to go back
         cy.xpath("//button[normalize-space()='Back']").click();
 
-
+        //make the gt into acceptance
+        cy.get(".divide-y.divide-gray-100.mt-2")
+          .find("li")
+          .contains('Ground Truth')
+          .parents('li') // Ensure you're working with the correct <li> element
+          .within(() => {
+            cy.get("select").eq(1, { timeout: 10000 }).select("acceptance");
+          });
 
       })
   });
@@ -240,7 +239,6 @@ describe('make ground truth task for single audio task', () => {
 
 describe('make ground truth task for multiple audio task', () => {
   it('go to task and create ground truth', () => {
-
     // Log in first
     cy.visit('https://app.audino.in/login');
     cy.get('#email').type(master_id);
@@ -273,16 +271,8 @@ describe('make ground truth task for multiple audio task', () => {
       // Check if the task list contains the "cypress task" and click on it
       cy.get("ul").find("li").contains(array_of_audios[i]).should('exist').click();
       cy.wait(4000);
-    //make the gt into acceptance
-    cy.get(".divide-y.divide-gray-100.mt-2")
-    .find("li")
-    .contains('Ground Truth')
-    .parents('li') // Ensure you're working with the correct <li> element
-    .within(() => {
-      cy.get("select").eq(1, { timeout: 10000 }).select("acceptance");
-    });
-  
-        cy.wait(3000)
+
+      cy.wait(3000)
       // Check if the ground truth project already exists
       cy.get(".divide-y.divide-gray-100.mt-2")
         .find("li")
@@ -308,6 +298,7 @@ describe('make ground truth task for multiple audio task', () => {
             cy.wait(2000)
             cy.xpath("//button[normalize-space()='Submit']").click();
             cy.wait(2000)
+            cy.xpath("//button[normalize-space()='Submit']", { timeout: 1000000 }).should('not.exist');
           } else {
             cy.log('Ground truth already exists, skipping creation steps.');
           }
@@ -445,8 +436,17 @@ describe('make ground truth task for multiple audio task', () => {
             });
           })
           cy.wait(1000)
+          //make the gt into acceptance
+          cy.get(".divide-y.divide-gray-100.mt-2")
+            .find("li")
+            .contains('Ground Truth')
+            .parents('li') // Ensure you're working with the correct <li> element
+            .within(() => {
+              cy.get("select").eq(1, { timeout: 10000 }).select("acceptance");
+            });
 
-
+            cy.wait(5000)
+          // Click on the navigation element to go back
           // Click on the navigation to list of tasks
           cy.xpath("//button[normalize-space()='Back']").click();
         })

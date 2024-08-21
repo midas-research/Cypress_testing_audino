@@ -82,52 +82,61 @@ describe('export annotaion of Single Audio task', () => {
           cy.wait(2000)
 
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible').click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
-          cy.get('#format').should('be.visible', { timeout: 100000 });
+          cy.get('#format', { timeout: 1000000 }).should('be.visible');
           cy.get('#format').select("Common Voice");
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
 
-          // Wait for 2 seconds before the next iteration
+          // Wait for 5 seconds before the next iteration
           cy.wait(5000);
-
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible').click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
-          cy.get('#format').should('be.visible', { timeout: 100000 });
+          cy.get('#format').should('be.visible', { timeout: 10000000 });
           cy.get('#format').select("Librispeech");
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
 
-          // Wait for 2 seconds before the next iteration
+          // Wait for 5 seconds before the next iteration
           cy.wait(5000);
-
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible').click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
-          cy.get('#format').should('be.visible', { timeout: 100000 });
+          cy.get('#format').should('be.visible', { timeout: 1000000 });
           cy.get('#format').select("VoxPopuli");
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
 
-          // Wait for 2 seconds before the next iteration
+          // Wait for 5 seconds before the next iteration
           cy.wait(5000);
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible').click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
-          cy.get('#format').should('be.visible', { timeout: 100000 });
+          cy.get('#format').should('be.visible', { timeout: 1000000 });
           cy.get('#format').select("Ted-Lium");
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
+          // Wait for 5 seconds before the next iteration
+          cy.wait(5000);
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
+
 
           //For Quality Report
           // // Wait for the menu to be visible using a more flexible selector
@@ -221,7 +230,7 @@ describe('export annotaion of Multiple Audio task', () => {
           cy.wait(2000)
 
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible', { timeout: 100000 }).click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
@@ -230,11 +239,12 @@ describe('export annotaion of Multiple Audio task', () => {
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
 
-          // Wait for 2 seconds before the next iteration
+          // Wait for 5 seconds before the next iteration
           cy.wait(5000);
-
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible', { timeout: 100000 }).click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
@@ -243,11 +253,12 @@ describe('export annotaion of Multiple Audio task', () => {
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
 
-          // Wait for 2 seconds before the next iteration
+          // Wait for 5 seconds before the next iteration
           cy.wait(5000);
-
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible', { timeout: 100000 }).click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
@@ -255,11 +266,12 @@ describe('export annotaion of Multiple Audio task', () => {
           cy.get('#format').select("VoxPopuli");
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
-
-          // Wait for 2 seconds before the next iteration
+          // Wait for 5 seconds before the next iteration
           cy.wait(5000);
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
           // Open the menu and click on 'Export annotation'
-          cy.xpath("//div[@class='relative flex-none']").should('be.visible', { timeout: 100000 }).click();
+          cy.xpath("//div[@class='relative flex-none']", { timeout: 1000000 }).should('be.visible', { timeout: 100000 }).click();
           cy.xpath("//button[contains(text(), 'Export annotation')]").should('be.visible').click();
 
           // Wait for the dialog box to appear and then run the download process
@@ -267,7 +279,9 @@ describe('export annotaion of Multiple Audio task', () => {
           cy.get('#format').select("Ted-Lium");
           // Click on the 'Download' button
           cy.xpath("//button[normalize-space()='Download']").click();
-
+          // Wait for the modal to disappear before proceeding
+          cy.xpath("//button[normalize-space()='Downloading...']", { timeout: 1000000 }).should('not.exist');
+          
           //For Quality Report
           // // Wait for the menu to be visible using a more flexible selector
           // cy.xpath("//div[@class='relative flex-none']")

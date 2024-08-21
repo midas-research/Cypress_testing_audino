@@ -11,7 +11,7 @@ module.exports = defineConfig({
     master_password:"qudino1234",
     master_email:"amitkewot59@gmail.com",
     master_no:"7002836460",
-    org_name:"cypress3",
+    org_name:"Testing",
     //worker 1
     worker1_id:"Aman_Singla",
     worker1_password:"Qwerty@1234",

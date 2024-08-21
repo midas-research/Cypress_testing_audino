@@ -85,7 +85,7 @@ describe('select task', () => {
                     // Convert minutes and seconds to milliseconds
                     const segment_in_ms = (minutes * 60 * 1000) + (seconds * 1000);
                     // Calculate the value and round it up
-                    const dividedValue = Math.ceil(segment_in_ms / 5);
+                    const dividedValue = Math.ceil(segment_in_ms / 5)+1000;
 
                     // Use the rounded value in Cypress
                     cy.get('#segment_duration').clear().type(dividedValue);
@@ -134,7 +134,7 @@ describe('select task', () => {
                     // Convert minutes and seconds to milliseconds
                     const segment_in_ms = (minutes * 60 * 1000) + (seconds * 1000);          // Set #segment_duration to 0
                     // Calculate the value and round it up
-                    const dividedValue = Math.ceil(segment_in_ms / 5);
+                    const dividedValue = Math.ceil(segment_in_ms / 5)+1000;
 
                     // Use the rounded value in Cypress
                     cy.get('#segment_duration').clear().type(dividedValue);
