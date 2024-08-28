@@ -171,6 +171,137 @@ describe('worker 1 annotation', () => {
                 cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
             }
         });
+
+        for (let i = 0; i < 2; i++) {
+            // Use cy.document() to avoid Cypress's automatic retry behavior
+            cy.document().then((doc) => {
+                const element = cy.xpath("//a[contains(@class,'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 active')]");
+
+                if (element) {
+                    // Element exists, proceed with processing
+                    element.click();
+                    cy.wait(2000);
+                    // Get the total number of jobs
+                    cy.xpath("//ul[@class='divide-y divide-gray-100 mt-2']").find("li").its('length').then((length) => {
+                        // Iterate over each job
+                        for (let i = 0; i < length; i++) {
+                            cy.xpath("//ul[@class='divide-y divide-gray-100 mt-2']").find("li").eq(i).click();
+
+                            // Intercept the audio loading request
+                            cy.intercept('GET', '**/api/audio/**').as('loadAudio');
+
+                            // Wait for the wave element to be visible
+                            cy.get("body > div:nth-child(3) > div:nth-child(1) > main:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > wave:nth-child(1)", { timeout: 500000 }).should('be.visible');
+
+                            // Wait for the audio to load
+                            cy.wait(5000);
+
+                            // Get the {TASK_ID} from the URL
+                            cy.url().then((url) => {
+                                const taskId = url.split('/').pop();
+
+                                // Retrieve the token from local storage
+                                cy.window().then((win) => {
+                                    const token = win.localStorage.getItem('audino-key');
+
+                                    // Make the labels API call and store the response in an alias
+                                    cy.request({
+                                        method: 'GET',
+                                        url: `https://api.audino.in/api/labels?job_id=${taskId}&page_size=500&page=1&org=${org_name}`,
+                                        headers: {
+                                            'Authorization': `Token ${token}`,
+                                            'Content-Type': 'application/json'
+                                        }
+                                    }).as('labels'); // Store in alias
+
+                                    // Now handle the points and annotation creation
+                                    cy.xpath("//p[@class='truncate text-center text-sm font-bold leading-6 my-2']", { timeout: 500000 }).invoke('text').then((text) => {
+                                        let textContent;
+                                        cy.wait(5000)
+                                        cy.xpath("//p[@class='truncate text-center text-sm font-bold leading-6 my-2']")
+                                            .invoke('text')
+                                            .then(t => {
+                                                cy.wait(5000)
+                                                textContent = t;
+                                                // You can use textContent here or in other tests
+                                                cy.log(textContent); // Optional: Log the text to the Cypress console for verification
+
+                                                cy.log(text, "text")
+                                                cy.log(textContent, "textContent")
+                                                let times = textContent.split('-');
+                                                cy.log("times", times)
+                                                let startTime = times[0].split(':').reduce((acc, time) => (60 * acc) + +time);
+                                                // Parse the audio duration
+                                                let [minutes, seconds] = times[1].split(':').map(Number);
+                                                cy.log(seconds, minutes)
+                                                // Convert minutes and seconds to milliseconds
+                                                let endTime = (minutes * 60 * 1000) + (seconds * 1000);
+
+                                                let points = [0.00, 0.00, endTime, endTime];
+
+                                                cy.log(points);
+
+                                                // Access the labels from the alias
+                                                cy.get('@labels').then((response) => {
+                                                    let label = response.body.results; // Access the first label or adjust as needed
+                                                    expect(response.status).to.eq(200);
+                                                    cy.log('Label API call was successful', label.id);
+
+                                                    // Wait for the 2nd API
+                                                    cy.wait(2000);
+
+                                                    // Create the annotation with the retrieved label
+                                                    let payload = {
+                                                        shapes: [
+                                                            {
+                                                                attributes: [],
+                                                                frame: 0,
+                                                                label_id: label[1].id,
+                                                                points: points,
+                                                                type: "rectangle",
+                                                                transcript: annotations_1,
+                                                                gender: "male",
+                                                                locale: "en-US",
+                                                                age: "51",
+                                                                accent: "en-IN",
+                                                                emotion: "happy",
+                                                                color: "#a4fd8080"
+                                                            }
+                                                        ],
+                                                        tags: [],
+                                                        tracks: []
+                                                    };
+
+                                                    cy.request({
+                                                        method: 'PATCH',
+                                                        url: `https://api.audino.in/api/jobs/${taskId}/annotations?org=${org_name}&action=create`,
+                                                        headers: {
+                                                            'Authorization': `Token ${token}`,
+                                                            'Content-Type': 'application/json'
+                                                        },
+                                                        body: payload
+                                                    }).then((response) => {
+                                                        expect(response.status).to.eq(200);
+                                                        cy.log('API call successful');
+
+                                                        // Interact with the dropdown to select the "completed" option
+                                                        cy.get("select[id='state']").select('completed');
+                                                    });
+                                                });
+                                            });
+                                    });
+                                });
+                            });
+
+                            // Wait before moving to the next item
+                            cy.wait(2000);
+                            //back command
+                            cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
+                        }
+                    });
+                }
+            })
+        }
     });
 });
 
@@ -321,6 +452,136 @@ describe('worker 2 annotation', () => {
                 cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
             }
         });
+        for (let i = 0; i < 2; i++) {
+            // Use cy.document() to avoid Cypress's automatic retry behavior
+            cy.document().then((doc) => {
+                const element = cy.xpath("//a[contains(@class,'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 active')]");
+
+                if (element) {
+                    // Element exists, proceed with processing
+                    element.click();
+                    cy.wait(2000);
+                    // Get the total number of jobs
+                    cy.xpath("//ul[@class='divide-y divide-gray-100 mt-2']").find("li").its('length').then((length) => {
+                        // Iterate over each job
+                        for (let i = 0; i < length; i++) {
+                            cy.xpath("//ul[@class='divide-y divide-gray-100 mt-2']").find("li").eq(i).click();
+
+                            // Intercept the audio loading request
+                            cy.intercept('GET', '**/api/audio/**').as('loadAudio');
+
+                            // Wait for the wave element to be visible
+                            cy.get("body > div:nth-child(3) > div:nth-child(1) > main:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > wave:nth-child(1)", { timeout: 500000 }).should('be.visible');
+
+                            // Wait for the audio to load
+                            cy.wait(5000);
+
+                            // Get the {TASK_ID} from the URL
+                            cy.url().then((url) => {
+                                const taskId = url.split('/').pop();
+
+                                // Retrieve the token from local storage
+                                cy.window().then((win) => {
+                                    const token = win.localStorage.getItem('audino-key');
+
+                                    // Make the labels API call and store the response in an alias
+                                    cy.request({
+                                        method: 'GET',
+                                        url: `https://api.audino.in/api/labels?job_id=${taskId}&page_size=500&page=1&org=${org_name}`,
+                                        headers: {
+                                            'Authorization': `Token ${token}`,
+                                            'Content-Type': 'application/json'
+                                        }
+                                    }).as('labels'); // Store in alias
+
+                                    // Now handle the points and annotation creation
+                                    cy.xpath("//p[@class='truncate text-center text-sm font-bold leading-6 my-2']", { timeout: 500000 }).invoke('text').then((text) => {
+                                        let textContent;
+                                        cy.wait(5000)
+                                        cy.xpath("//p[@class='truncate text-center text-sm font-bold leading-6 my-2']")
+                                            .invoke('text')
+                                            .then(t => {
+                                                cy.wait(5000)
+                                                textContent = t;
+                                                // You can use textContent here or in other tests
+                                                cy.log(textContent); // Optional: Log the text to the Cypress console for verification
+
+                                                cy.log(text, "text")
+                                                cy.log(textContent, "textContent")
+                                                let times = textContent.split('-');
+                                                cy.log("times", times)
+                                                let startTime = times[0].split(':').reduce((acc, time) => (60 * acc) + +time);
+                                                // Parse the audio duration
+                                                let [minutes, seconds] = times[1].split(':').map(Number);
+                                                cy.log(seconds, minutes)
+                                                // Convert minutes and seconds to milliseconds
+                                                let endTime = (minutes * 60 * 1000) + (seconds * 1000);
+
+                                                let points = [0.00, 0.00, endTime, endTime];
+
+                                                cy.log(points);
+
+                                                // Access the labels from the alias
+                                                cy.get('@labels').then((response) => {
+                                                    let label = response.body.results; // Access the first label or adjust as needed
+                                                    expect(response.status).to.eq(200);
+                                                    cy.log('Label API call was successful', label.id);
+
+                                                    // Wait for the 2nd API
+                                                    cy.wait(2000);
+
+                                                    // Create the annotation with the retrieved label
+                                                    let payload = {
+                                                        shapes: [
+                                                            {
+                                                                attributes: [],
+                                                                frame: 0,
+                                                                label_id: label[1].id,
+                                                                points: points,
+                                                                type: "rectangle",
+                                                                transcript: annotations_1,
+                                                                gender: "male",
+                                                                locale: "en-US",
+                                                                age: "51",
+                                                                accent: "en-IN",
+                                                                emotion: "happy",
+                                                                color: "#a4fd8080"
+                                                            }
+                                                        ],
+                                                        tags: [],
+                                                        tracks: []
+                                                    };
+
+                                                    cy.request({
+                                                        method: 'PATCH',
+                                                        url: `https://api.audino.in/api/jobs/${taskId}/annotations?org=${org_name}&action=create`,
+                                                        headers: {
+                                                            'Authorization': `Token ${token}`,
+                                                            'Content-Type': 'application/json'
+                                                        },
+                                                        body: payload
+                                                    }).then((response) => {
+                                                        expect(response.status).to.eq(200);
+                                                        cy.log('API call successful');
+
+                                                        // Interact with the dropdown to select the "completed" option
+                                                        cy.get("select[id='state']").select('completed');
+                                                    });
+                                                });
+                                            });
+                                    });
+                                });
+                            });
+
+                            // Wait before moving to the next item
+                            cy.wait(2000);
+                            //back command
+                            cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
+                        }
+                    });
+                }
+            })
+        }
     });
 });
 
@@ -471,5 +732,135 @@ describe('worker 3 annotation', () => {
                 cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
             }
         });
+        for (let i = 0; i < 2; i++) {
+            // Use cy.document() to avoid Cypress's automatic retry behavior
+            cy.document().then((doc) => {
+                const element = cy.xpath("//a[contains(@class,'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 active')]");
+
+                if (element) {
+                    // Element exists, proceed with processing
+                    element.click();
+                    cy.wait(2000);
+                    // Get the total number of jobs
+                    cy.xpath("//ul[@class='divide-y divide-gray-100 mt-2']").find("li").its('length').then((length) => {
+                        // Iterate over each job
+                        for (let i = 0; i < length; i++) {
+                            cy.xpath("//ul[@class='divide-y divide-gray-100 mt-2']").find("li").eq(i).click();
+
+                            // Intercept the audio loading request
+                            cy.intercept('GET', '**/api/audio/**').as('loadAudio');
+
+                            // Wait for the wave element to be visible
+                            cy.get("body > div:nth-child(3) > div:nth-child(1) > main:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > wave:nth-child(1)", { timeout: 500000 }).should('be.visible');
+
+                            // Wait for the audio to load
+                            cy.wait(5000);
+
+                            // Get the {TASK_ID} from the URL
+                            cy.url().then((url) => {
+                                const taskId = url.split('/').pop();
+
+                                // Retrieve the token from local storage
+                                cy.window().then((win) => {
+                                    const token = win.localStorage.getItem('audino-key');
+
+                                    // Make the labels API call and store the response in an alias
+                                    cy.request({
+                                        method: 'GET',
+                                        url: `https://api.audino.in/api/labels?job_id=${taskId}&page_size=500&page=1&org=${org_name}`,
+                                        headers: {
+                                            'Authorization': `Token ${token}`,
+                                            'Content-Type': 'application/json'
+                                        }
+                                    }).as('labels'); // Store in alias
+
+                                    // Now handle the points and annotation creation
+                                    cy.xpath("//p[@class='truncate text-center text-sm font-bold leading-6 my-2']", { timeout: 500000 }).invoke('text').then((text) => {
+                                        let textContent;
+                                        cy.wait(5000)
+                                        cy.xpath("//p[@class='truncate text-center text-sm font-bold leading-6 my-2']")
+                                            .invoke('text')
+                                            .then(t => {
+                                                cy.wait(5000)
+                                                textContent = t;
+                                                // You can use textContent here or in other tests
+                                                cy.log(textContent); // Optional: Log the text to the Cypress console for verification
+
+                                                cy.log(text, "text")
+                                                cy.log(textContent, "textContent")
+                                                let times = textContent.split('-');
+                                                cy.log("times", times)
+                                                let startTime = times[0].split(':').reduce((acc, time) => (60 * acc) + +time);
+                                                // Parse the audio duration
+                                                let [minutes, seconds] = times[1].split(':').map(Number);
+                                                cy.log(seconds, minutes)
+                                                // Convert minutes and seconds to milliseconds
+                                                let endTime = (minutes * 60 * 1000) + (seconds * 1000);
+
+                                                let points = [0.00, 0.00, endTime, endTime];
+
+                                                cy.log(points);
+
+                                                // Access the labels from the alias
+                                                cy.get('@labels').then((response) => {
+                                                    let label = response.body.results; // Access the first label or adjust as needed
+                                                    expect(response.status).to.eq(200);
+                                                    cy.log('Label API call was successful', label.id);
+
+                                                    // Wait for the 2nd API
+                                                    cy.wait(2000);
+
+                                                    // Create the annotation with the retrieved label
+                                                    let payload = {
+                                                        shapes: [
+                                                            {
+                                                                attributes: [],
+                                                                frame: 0,
+                                                                label_id: label[1].id,
+                                                                points: points,
+                                                                type: "rectangle",
+                                                                transcript: annotations_1,
+                                                                gender: "male",
+                                                                locale: "en-US",
+                                                                age: "51",
+                                                                accent: "en-IN",
+                                                                emotion: "happy",
+                                                                color: "#a4fd8080"
+                                                            }
+                                                        ],
+                                                        tags: [],
+                                                        tracks: []
+                                                    };
+
+                                                    cy.request({
+                                                        method: 'PATCH',
+                                                        url: `https://api.audino.in/api/jobs/${taskId}/annotations?org=${org_name}&action=create`,
+                                                        headers: {
+                                                            'Authorization': `Token ${token}`,
+                                                            'Content-Type': 'application/json'
+                                                        },
+                                                        body: payload
+                                                    }).then((response) => {
+                                                        expect(response.status).to.eq(200);
+                                                        cy.log('API call successful');
+
+                                                        // Interact with the dropdown to select the "completed" option
+                                                        cy.get("select[id='state']").select('completed');
+                                                    });
+                                                });
+                                            });
+                                    });
+                                });
+                            });
+
+                            // Wait before moving to the next item
+                            cy.wait(2000);
+                            //back command
+                            cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
+                        }
+                    });
+                }
+            })
+        }
     });
 });
