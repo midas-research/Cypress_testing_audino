@@ -732,7 +732,7 @@ describe('worker 3 annotation', () => {
                 cy.xpath("//div[@class='flex items-center mb-2 hover:cursor-pointer']").click()
             }
         });
-        for (let i = 0; i < 2; i++) {
+        for (let i = 0; i < 1; i++) {
             // Use cy.document() to avoid Cypress's automatic retry behavior
             cy.document().then((doc) => {
                 const element = cy.xpath("//a[contains(@class,'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 active')]");

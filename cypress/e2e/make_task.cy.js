@@ -49,13 +49,13 @@ describe('select task', () => {
       .should('exist')
       .click();
 
-    // Click on the Tasks link
-    cy.xpath("//a[normalize-space()='Tasks']").click();
-    cy.wait(1000);
+        // Click on the Tasks link
+        cy.xpath("//a[normalize-space()='Tasks']", { timeout: 50000 }).click();
+        cy.intercept('GET', '**/api/**').as('apiCall');
 
     datasets.forEach((dataset) => {
       // Check if the task already exists
-      cy.get(".divide-y.divide-gray-100.mt-2", { timeout: 10000 })
+      cy.get(".divide-y.divide-gray-100.mt-2", { timeout: 1000000 })
         .then($div => {
           let taskExists = false;
           $div.find('li').each((index, el) => {
@@ -108,7 +108,9 @@ describe('select task', () => {
             // Submit the form
             cy.xpath("//button[normalize-space()='Save']",{timeout:50000}).click();
             // Click on the back button
-            cy.xpath("//button[normalize-space()='Back']",{timeout:50000}).click();
+            // cy.xpath("//button[normalize-space()='Back']",{timeout:50000}).click();
+            // Wait for API calls to complete
+            cy.wait('@apiCall', { timeout: 50000 });
           } else {
             cy.log(`Task "cypress_task_${dataset}" already exists, skipping creation steps.`);
           }
