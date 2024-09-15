@@ -51,6 +51,7 @@ describe('make org', () => {
     //     cy.get('.organization-element').should('contain', 'cypress0');
     //   }
     // });
-  });
+    cy.wait(5000)
+    });
 
 });

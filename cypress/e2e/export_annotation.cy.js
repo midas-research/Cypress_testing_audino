@@ -335,6 +335,7 @@ describe('export annotaion of Multiple Audio task', () => {
         }
       })
     }
+    cy.wait(5000)
   })
 })
 

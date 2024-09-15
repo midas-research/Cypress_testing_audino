@@ -107,7 +107,7 @@ describe('make org', () => {
     //Click on save button after adding
 
     cy.xpath("//button[normalize-space()='Save']").click();
-
+    cy.wait(5000)
   });
 
 });

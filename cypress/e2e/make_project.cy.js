@@ -112,5 +112,6 @@ describe('select org and create project', () => {
 
     // Click on the back button
     cy.xpath("//div[contains(@class,'flex items-center mb-2 hover:cursor-pointer')]").click();
+    cy.wait(5000)
   });
 });

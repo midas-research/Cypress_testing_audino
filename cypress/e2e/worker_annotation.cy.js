@@ -302,6 +302,7 @@ describe('worker 1 annotation', () => {
                 }
             })
         }
+        cy.wait(5000)
     });
 });
 
@@ -582,6 +583,7 @@ describe('worker 2 annotation', () => {
                 }
             })
         }
+        cy.wait(5000)
     });
 });
 
@@ -862,5 +864,6 @@ describe('worker 3 annotation', () => {
                 }
             })
         }
+        cy.wait(5000)
     });
 });

@@ -455,6 +455,7 @@ describe('make ground truth task for multiple audio task', () => {
         }
       })
     }
+    cy.wait(5000)
   })
 });
 

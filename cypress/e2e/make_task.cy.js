@@ -116,6 +116,8 @@ describe('select task', () => {
           }
         });
         });
-    });
+    
+        cy.wait(5000)
+        });
 
 });

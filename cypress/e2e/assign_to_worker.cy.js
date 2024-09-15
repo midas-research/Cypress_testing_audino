@@ -323,6 +323,7 @@ describe('Assign to worker for multiple audio annotations', () => {
       processTasks();
     }
 
+    cy.wait(5000)
   });
 });
 

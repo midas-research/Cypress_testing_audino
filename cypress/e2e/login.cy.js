@@ -13,5 +13,6 @@ describe('Audino Login Test', () => {
     // Click the submit button
     cy.get("button[type='submit']").click();
 
+    cy.wait(5000)
   });
 });
